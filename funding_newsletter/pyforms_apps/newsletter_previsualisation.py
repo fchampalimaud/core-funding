@@ -33,5 +33,4 @@ class NewsletterPrevisualisation(BaseWidget):
 
 	def __refresh_event(self):
 		body = render_newsletter(False)
-		print body
 		self._htmlcontrol.value = body
