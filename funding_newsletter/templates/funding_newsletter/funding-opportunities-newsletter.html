@@ -1,0 +1,123 @@
+{% load thumbnail %}{% load humanize %}
+<html>
+	<body style="font: 12px/1.25 arial,helvetica,sans-serif;" >
+		<table style="border: 1px solid #D3D7D9;background-color: #F9F9F9;padding:20px" align="center" width="650px" >
+			<tr>
+				<td style="padding-left:20px;padding-right:20px;margin-bottom:40px; text-align:center">
+				  <h1 style="color:#0099ff;font-size:32px;margin:5px auto;">FUNDING OPPORTUNITIES</h1>
+				</td>
+			</tr>
+			{% if newfunds %}
+			<tr>
+				<td style="padding-left:20px;padding-right:20px;margin-bottom:40px;margin-top:20px; text-align:left">
+				  <h1 style="color:#F00;font-size:18px;margin:5px auto;">NEW OPPORTUNITIES</h1>
+				</td>
+			</tr>
+			{% endif %}
+			{% for fund in newfunds %}
+				<tr>
+				<td style='padding-left:20px;padding-right:20px;' >
+				<hr>
+					<h2 style="color: #0099FF;font-size:14px;margin: 5px auto;" >
+						<a style='color: inherit;text-decoration: none;' href='{{fund.fundingopportunity_link}}' target="_blank" >{{fund.fundingopportunity_name}}</a>
+					</h2>
+					<div style="clear:both"></div>
+					<h3 style="float:left;z-index:9;color: #707070;font-size:14px;margin:0;padding:0;" >{{ fund.financingAgency.grantor_name }}</h3>
+					<div style="clear:both"></div>					
+					<table style="border-collapse: collapse;border:none;margin-top:5px;margin-bottom:25px;">
+						{% if fund.fundingopportunity_value %}
+						<tr style="border-collapse: collapse;border:none;font-size:12px;" >
+							<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;" >
+								<label style="font-weight: bold;">Funding:</label>
+								{{fund.fundingopportunity_value|intcomma}} {{fund.currency}} {% if fund.paymentfrequency %}{{fund.paymentfrequency}}{% endif %}
+							</td>
+						</tr>
+						{% endif %}
+						<tr style="border-collapse: collapse;border:none;font-size:12px;" >
+							<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;" >
+								<label style="font-weight: bold;">Deadline:</label>
+								{{fund.fundingopportunity_end}} (Lisbon time)
+							</td>
+						</tr>
+						{% if fund.fundingopportunity_eligibility %}
+						<tr style="border-collapse: collapse;border:none;font-size:12px;" >
+							<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;" >
+								<label style="font-weight: bold;">ELIGIBILITY:</label>
+								{{fund.fundingopportunity_eligibility}}
+							</td>
+						</tr>
+						{% endif %}
+						{% if fund.fundingopportunity_scope %}
+						<tr style="border-collapse: collapse;border:none;font-size:12px;" >
+							<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;" >
+								<label style="font-weight: bold;">SCOPE:</label>
+								{{fund.fundingopportunity_scope}}
+							</td>
+						</tr>
+						{% endif %}
+					</table>
+				</td>
+				</tr>
+			{% endfor %}
+
+
+			{% if closingfunds %}
+			<tr>
+				<td style="margin-bottom:40px;margin-top:20px;padding-left:20px;padding-right:20px;text-align:left">
+				  <h1 style="color:#F00;font-size:18px;margin:5px auto;">CLOSING SOON</h1>
+				</td>
+			</tr>
+			<tr>
+				<td style="padding-left:20px;padding-right:20px;" >
+					<ul>
+			{% endif %}
+			{% for fund in closingfunds %}
+				<li>
+					<a style='color: inherit;text-decoration: none;' href='{{fund.fundingopportunity_link}}' target="_blank" >
+						{{fund.fundingopportunity_name}}
+					</a>
+				</li>
+			{% endfor %}
+			{% if closingfunds %}
+					</ul>
+				</td>
+			</tr>
+			{% endif %}
+
+
+			{% if rollingfunds %}
+			<tr>
+				<td style="margin-bottom:40px;margin-top:20px;padding-left:20px;padding-right:20px;text-align:left">
+				  <h1 style="color:#F00;font-size:18px;margin:5px auto;">ROLLING</h1>
+				</td>
+			</tr>
+			</tr>
+			{% endif %}
+			{% for fund in rollingfunds %}
+				<tr>
+				<td style="padding-left:20px;padding-right:20px;" >
+				<hr>
+					<h2 style="color: #0099FF;font-size:14px;margin: 5px auto;" >
+						<a style='color: inherit;text-decoration: none;' href='{{fund.fundingopportunity_link}}' target="_blank" >{{fund.fundingopportunity_name}}</a>
+					</h2>
+					<div style="clear:both"></div>
+					<h3 style="float:left;z-index:9;color: #707070;font-size:14px;margin:0;padding:0;" >{{ fund.financingAgency.grantor_name }}</h3>
+					<div style="clear:both"></div>					
+					{% if fund.fundingopportunity_value %}						
+					<table style="border-collapse: collapse;border:none;margin-top:5px;margin-bottom:25px;">
+						<tr style="border-collapse: collapse;border:none;font-size:12px;" >
+							<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;" >
+								<label style="font-weight: bold;">Funding:</label>
+								{{fund.fundingopportunity_value|intcomma}} {{fund.currency}} {% if fund.paymentfrequency %}{{fund.paymentfrequency}}{% endif %}
+							</td>
+						</tr>									
+					</table>
+					{% endif %}
+				</td>
+				</tr>
+			{% endfor %}
+		</table>
+		<br/>
+		<div style="text-align:center" >For comments or suggestions please send an email to <b>preaward.osp@research.fchampalimaud.org</b></div>
+	</body>
+</html>
