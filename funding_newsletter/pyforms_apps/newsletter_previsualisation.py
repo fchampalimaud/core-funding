@@ -3,7 +3,6 @@ from pyforms_web.web.BaseWidget import BaseWidget
 from pyforms_web.web.Controls.ControlHtml import ControlHtml
 from pyforms_web.web.Controls.ControlButton import ControlButton
 from orquestra.plugins import LayoutPositions
-from funding_opportunities_apps.view_opportunity_app import ViewOpportunityApp
 from django.utils import timezone
 from datetime import timedelta
 
