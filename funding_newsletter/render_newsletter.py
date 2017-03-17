@@ -25,6 +25,7 @@ def render_newsletter(save_flag=True):
 	newfunds = FundingOpportunity.objects.all()
 	limit_date = timezone.now() + timedelta(days=4*30)
 	newfunds = newfunds.exclude(fundingopportunity_end__gt=limit_date)
+	newfunds = newfunds.exclude(fundingopportunity_end__lt=timezone.now())
 	newfunds = newfunds.exclude(fundingopportunity_published=True)
 	newfunds = newfunds.exclude(fundingopportunity_end=None)
 	if last_run is not None:
