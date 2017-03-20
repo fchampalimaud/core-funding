@@ -50,7 +50,7 @@ class NewsletterPrevisualisation(BaseWidget):
 					settings.FUNDING_OPPORTUNITIES_EMAIL_SUBJECT, 
 					body, 
 					settings.EMAIL_FROM, 
-					tuple(self._email.value) )
+					(self._email.value,) )
 				msg.content_subtype = "html"
 				msg.send()
 				self.success('Email sent with success','Success')
