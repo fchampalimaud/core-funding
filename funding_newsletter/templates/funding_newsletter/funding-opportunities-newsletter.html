@@ -10,21 +10,22 @@
 			{% if newfunds %}
 			<tr>
 				<td style="padding-left:20px;padding-right:20px;margin-bottom:40px;margin-top:20px; text-align:left">
-				  <h1 style="color:#F00;font-size:18px;margin:5px auto;">NEW OPPORTUNITIES</h1>
+				  <hr>
+				  <h1 style="color:#707070;font-size:18px;margin:5px auto;">NEW OPPORTUNITIES</h1>
+				  <hr>
 				</td>
 			</tr>
 			{% endif %}
 			{% for fund in newfunds %}
 				<tr>
-				<td style='padding-left:20px;padding-right:20px;' >
-				<hr>
-					<h2 style="color: #0099FF;font-size:14px;margin: 5px auto;" >
+				<td style='padding-left:20px;padding-right:20px;padding-bottom:25px;' >
+				
+					<h2 style="color: #0099FF;font-size:14px;margin: 5px auto;margin-bottom: 0px;" >
 						<a style='color: inherit;text-decoration: none;' href='{{fund.fundingopportunity_link}}' target="_blank" >{{fund.fundingopportunity_name}}</a>
 					</h2>
-					<div style="clear:both"></div>
 					<h3 style="float:left;z-index:9;color: #707070;font-size:14px;margin:0;padding:0;" >{{ fund.financingAgency.grantor_name }}</h3>
 					<div style="clear:both"></div>					
-					<table style="border-collapse: collapse;border:none;margin-top:5px;margin-bottom:25px;">
+					<table style="border-collapse: collapse;border:none;margin-top:5px;">
 						{% if fund.fundingopportunity_value %}
 						<tr style="border-collapse: collapse;border:none;font-size:12px;" >
 							<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;" >
@@ -41,17 +42,17 @@
 						</tr>
 						{% if fund.fundingopportunity_eligibility %}
 						<tr style="border-collapse: collapse;border:none;font-size:12px;" >
-							<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;" >
-								<label style="font-weight: bold;">ELIGIBILITY:</label>
-								{{fund.fundingopportunity_eligibility}}
+							<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;padding-top: 8px;" >
+								<label style="font-weight: bold;">ELIGIBILITY</label><br/>
+								{{fund.fundingopportunity_eligibility|linebreaksbr}}
 							</td>
 						</tr>
 						{% endif %}
 						{% if fund.fundingopportunity_scope %}
 						<tr style="border-collapse: collapse;border:none;font-size:12px;" >
-							<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;" >
-								<label style="font-weight: bold;">SCOPE:</label>
-								{{fund.fundingopportunity_scope}}
+							<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;padding-top: 8px;" >
+								<label style="font-weight: bold;">SCOPE</label><br/>
+								{{fund.fundingopportunity_scope|linebreaksbr}}
 							</td>
 						</tr>
 						{% endif %}
@@ -64,20 +65,22 @@
 			{% if closingfunds %}
 			<tr>
 				<td style="margin-bottom:40px;margin-top:20px;padding-left:20px;padding-right:20px;text-align:left">
-				  <h1 style="color:#F00;font-size:18px;margin:5px auto;">CLOSING SOON</h1>
+				  <hr>
+				  <h1 style="color:#707070;font-size:18px;margin:5px auto;">CLOSING IN LESS THAN 30 DAYS</h1>
+				  <hr>				  
 				</td>
 			</tr>
 			<tr>
-				<td style="padding-left:20px;padding-right:20px;" >
-					<ul>
+				<td style="padding-left:20px;padding-right:20px;padding-bottom:25px;" >
+					<ul style="padding-left: 15px;" >
 			{% endif %}
-			{% for fund in closingfunds %}
-				<li>
-					<a style='color: inherit;text-decoration: none;' href='{{fund.fundingopportunity_link}}' target="_blank" >
-						{{fund.fundingopportunity_name}}
-					</a>
-				</li>
-			{% endfor %}
+					{% for fund in closingfunds %}
+						<li style='padding-bottom:5px;font-size:12px;' >
+							<a style='color: #0099FF;font-size:12px;' href='{{fund.fundingopportunity_link}}' target="_blank" >
+								{{fund.fundingopportunity_name}}
+							</a>
+						</li>
+					{% endfor %}
 			{% if closingfunds %}
 					</ul>
 				</td>
@@ -87,24 +90,25 @@
 
 			{% if rollingfunds %}
 			<tr>
-				<td style="margin-bottom:40px;margin-top:20px;padding-left:20px;padding-right:20px;text-align:left">
-				  <h1 style="color:#F00;font-size:18px;margin:5px auto;">ROLLING</h1>
+				<td style="margin-bottom:40px;margin-top:20px;padding-left:20px;padding-right:20px;text-align:left;">
+					<hr>
+					<h1 style="color:#707070;font-size:18px;margin:5px auto;">ROLLING</h1>
+					<hr>
 				</td>
 			</tr>
 			</tr>
 			{% endif %}
 			{% for fund in rollingfunds %}
 				<tr>
-				<td style="padding-left:20px;padding-right:20px;" >
-				<hr>
-					<h2 style="color: #0099FF;font-size:14px;margin: 5px auto;" >
+				<td style="padding-left:20px;padding-right:20px;padding-bottom:25px;" >				
+					<h2 style="color: #0099FF;font-size:14px;margin: 5px auto;margin-bottom: 0px;" >
 						<a style='color: inherit;text-decoration: none;' href='{{fund.fundingopportunity_link}}' target="_blank" >{{fund.fundingopportunity_name}}</a>
 					</h2>
 					<div style="clear:both"></div>
 					<h3 style="float:left;z-index:9;color: #707070;font-size:14px;margin:0;padding:0;" >{{ fund.financingAgency.grantor_name }}</h3>
 					<div style="clear:both"></div>					
 					{% if fund.fundingopportunity_value %}						
-					<table style="border-collapse: collapse;border:none;margin-top:5px;margin-bottom:25px;">
+					<table style="border-collapse: collapse;border:none;margin-top:5px;">
 						<tr style="border-collapse: collapse;border:none;font-size:12px;" >
 							<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;" >
 								<label style="font-weight: bold;">Funding:</label>

@@ -32,15 +32,15 @@ try:
 	with open('last-run.txt', 'r') as infile: last_run = get_aware_datetime(infile.readline())
 except:
 	last_run = None
-	print 'first-run'
 
 if last_run is not None:
 	newfunds = FundingOpportunity.objects.all()
 	limit_date = timezone.now() + timedelta(days=4*30)
+
 	newfunds = newfunds.exclude(fundingopportunity_end__gt=limit_date)
 	newfunds = newfunds.exclude(fundingopportunity_published=True)
 	newfunds = newfunds.exclude(fundingopportunity_end=None)
-	newfunds = newfunds.exclude(fundingopportunity_end__lte=last_run) if last_run is not None else newfunds
+	newfunds = newfunds.exclude(fundingopportunity_end__lte=last_run)
 	newfunds = newfunds.order_by('fundingopportunity_end', 'fundingopportunity_name' )[:10]
 
 	rollingfunds = FundingOpportunity.objects.all()
