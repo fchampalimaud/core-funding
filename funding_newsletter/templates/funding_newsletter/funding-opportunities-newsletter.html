@@ -37,7 +37,7 @@
 						<tr style="border-collapse: collapse;border:none;font-size:12px;" >
 							<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;" >
 								<label style="font-weight: bold;">Deadline:</label>
-								{{fund.fundingopportunity_end}} (Lisbon time)
+								{{fund.fundingopportunity_end|date:'N j, Y, H:i'}} (Lisbon time)
 							</td>
 						</tr>
 						{% if fund.fundingopportunity_eligibility %}
