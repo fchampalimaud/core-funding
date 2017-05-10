@@ -15,7 +15,7 @@ class NewsletterPrevisualisation(BaseWidget):
 	
 
 	_uid 			= 'newsletter-previsualisation'
-	#groups	 		= ['superuser']
+	groups	 		= ['PROFILE: Can edit the funding opportunities']
 	icon			= 'desktop'
 	label 			= 'Newsletter pre-visualisation'
 	menu 			= 'top'
