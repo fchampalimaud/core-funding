@@ -11,8 +11,8 @@ from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 
 
-NEW_FUNDS_N_DAYS	 = 4*30 # show new funding opportunities with 
-NEW_FUNDS_N_MAX 	 = 10 # Maximum of funds to send
+NEW_FUNDS_N_DAYS	 = 5*30 # show new funding opportunities with 
+NEW_FUNDS_N_MAX 	 = 8 # Maximum of funds to send
 CLOSING_FUNDS_N_DAYS = 30 # number of days required for a fund to be considered a closing fund.
 ROLLING_FUNDS_MONTHS = [1,5,9]
 
@@ -54,7 +54,7 @@ def render_newsletter(save_flag=True):
 	limit_date = timezone.now() + timedelta(days=CLOSING_FUNDS_N_DAYS)
 	closingfunds = closingfunds.exclude(fundingopportunity_end__lt=timezone.now())
 	closingfunds = closingfunds.exclude(fundingopportunity_end__gt=limit_date)
-	closingfunds = closingfunds.order_by('fundingopportunity_end', 'fundingopportunity_name' )
+	closingfunds = closingfunds.order_by('subject','fundingopportunity_end', 'fundingopportunity_name' )
 	###############################################################################################
 
 	### ROLLING OPPORTUNITIES #####################################################################
@@ -69,7 +69,7 @@ def render_newsletter(save_flag=True):
 		if previous_tuesday<=timezone.now().date()<=first_monday:	
 			rollingfunds = FundingOpportunity.objects.all()
 			rollingfunds = rollingfunds.filter(fundingopportunity_end=None)
-			rollingfunds = rollingfunds.order_by('fundingopportunity_end', 'fundingopportunity_name' )
+			rollingfunds = rollingfunds.order_by('subject','fundingopportunity_end', 'fundingopportunity_name' )
 		else:
 			rollingfunds = []
 	else:
