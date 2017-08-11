@@ -92,7 +92,7 @@
 			<tr>
 				<td style="margin-bottom:40px;margin-top:20px;padding-left:20px;padding-right:20px;text-align:left">
 				  <hr>
-				  <h1 style="color:#707070;font-size:18px;margin:5px auto;">CLOSING IN LESS THAN 30 DAYS</h1>
+				  <h1 style="color:#707070;font-size:18px;margin:5px auto;">REMINDER | CLOSING IN LESS THAN 30 DAYS</h1>
 				  <hr>				  
 				</td>
 			</tr>
@@ -103,7 +103,7 @@
 					{% for fund in closingfunds %}
 						<li style='padding-bottom:5px;font-size:12px;' >
 							<a style='color: #0099FF;font-size:12px;' href='{{fund.fundingopportunity_link}}' target="_blank" >
-								{{fund.fundingopportunity_name}}
+								{{fund.financingAgency.grantor_name}} | {{fund.fundingopportunity_name}}
 							</a>
 						</li>
 					{% endfor %}
