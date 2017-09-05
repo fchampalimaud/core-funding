@@ -29,15 +29,19 @@
 			{% for fund in newfunds %}
 				{% ifchanged fund.subject %}
 					<tr>
-						<td style='background-color: #b3c6e7; padding-left:20px;padding-right:20px;padding-bottom:3px;padding-top: 5px;' >
-							{{ fund.subject|upper }}
+						<td style='padding-left:20px;padding-right:20px;'>
+							<div style='background-color: #b3c6e7; padding-left:5px;padding-right:20px;padding-bottom:3px;padding-top: 5px;' >{{ fund.subject|upper }}</div>
 						</td>
 					</tr>
 				{% endifchanged %}
 				<tr>
 				<td style='padding-left:20px;padding-right:20px;padding-bottom:25px;' >
 					<h2 style="color: #0099FF;font-size:14px;margin: 5px auto;margin-bottom: 0px;" >
-						<a style='color: inherit;text-decoration: none;' href='{{fund.fundingopportunity_link}}' target="_blank" >{{fund.fundingopportunity_name}}</a>
+						<a style='color: inherit;text-decoration: none;'
+						href='{{fund.fundingopportunity_link}}'
+						target="_blank" >
+						{{fund.fundingopportunity_name}}
+						</a>
 					</h2>
 					<h3 style="float:left;z-index:9;color: #707070;font-size:14px;margin:0;padding:0;" >{{ fund.financingAgency.grantor_name }}</h3>
 					<div style="clear:both"></div>					
@@ -101,8 +105,15 @@
 					<ul style="padding-left: 15px;" >
 			{% endif %}
 					{% for fund in closingfunds %}
+						{% ifchanged fund.subject %}
+						</ul>
+							{{ fund.subject|upper }}
+						<ul>								
+						{% endifchanged %}
 						<li style='padding-bottom:5px;font-size:12px;' >
-							<a style='color: #0099FF;font-size:12px;' href='{{fund.fundingopportunity_link}}' target="_blank" >
+							<a style='color: #0099FF;font-size:12px;'
+							href='http://funding-opportunities.fchampalimaud.org/app/timeline-app/#/funding_opportunities_apps.apps.timeline.viewfund.ViewFundApp/?obj_pk={{fund.fundingopportunity_id}}'
+							target="_blank" >
 								{{fund.financingAgency.grantor_name}} | {{fund.fundingopportunity_name}}
 							</a>
 						</li>
@@ -125,10 +136,19 @@
 			</tr>
 			{% endif %}
 			{% for fund in rollingfunds %}
+				{% ifchanged fund.subject %}
+					<tr>
+						<td style='padding-left:20px;padding-right:20px;'>
+							<div style='background-color: #b3c6e7; padding-left:5px;padding-right:20px;padding-bottom:3px;padding-top: 5px;' >{{ fund.subject|upper }}</div>
+						</td>
+					</tr>
+				{% endifchanged %}
 				<tr>
 				<td style="padding-left:20px;padding-right:20px;padding-bottom:25px;" >				
 					<h2 style="color: #0099FF;font-size:14px;margin: 5px auto;margin-bottom: 0px;" >
-						<a style='color: inherit;text-decoration: none;' href='{{fund.fundingopportunity_link}}' target="_blank" >{{fund.fundingopportunity_name}}</a>
+						<a style='color: inherit;text-decoration: none;'
+						href='http://funding-opportunities.fchampalimaud.org/app/timeline-app/#/funding_opportunities_apps.apps.timeline.viewfund.ViewFundApp/?obj_pk={{fund.fundingopportunity_id}}' 
+						target="_blank" >{{fund.fundingopportunity_name}}</a>
 					</h2>
 					<div style="clear:both"></div>
 					<h3 style="float:left;z-index:9;color: #707070;font-size:14px;margin:0;padding:0;" >{{ fund.financingAgency.grantor_name }}</h3>

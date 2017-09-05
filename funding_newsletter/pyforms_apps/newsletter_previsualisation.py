@@ -18,9 +18,9 @@ class NewsletterPrevisualisation(BaseWidget):
 	groups	 		= ['PROFILE: Can edit the funding opportunities']
 	icon			= 'desktop'
 	label 			= 'Newsletter pre-visualisation'
-	menu 			= 'top'
+	menu 			= 'left'
 	menu_order 		= 10
-	layout_position = LayoutPositions.NEW_TAB
+	layout_position = LayoutPositions.HOME
 	
 	def __init__(self):
 		super(NewsletterPrevisualisation, self).__init__(self.label)
@@ -30,16 +30,17 @@ class NewsletterPrevisualisation(BaseWidget):
 		self._refresh_btn = ControlButton('<i class="refresh icon"></i> Reload')
 		self._sendto_btn  = ControlButton('<i class="mail outline icon"></i> Sent to')
 		self.formset 	  = [
-			('_email', '_sendto_btn','_refresh_btn' ),
+			'_email',
+			(BaseWidget.FORM_NO_ROW_ALIGNMENT, '_sendto_btn','_refresh_btn' ),
 			'_htmlcontrol'
 		]
 
 		self._refresh_btn.value = self.__refresh_event
 		self._sendto_btn.value  = self.__sendto_event
 
-		#self._refresh_btn.include_label = False
+		self._refresh_btn.include_label = False
 		#self._refresh_btn.css = 'basic mini primary'
-		#self._sendto_btn.include_label = False
+		self._sendto_btn.include_label = False
 		#self._sendto_btn.css = 'basic mini primary'
 
 		self._htmlcontrol.value = render_newsletter(False)
