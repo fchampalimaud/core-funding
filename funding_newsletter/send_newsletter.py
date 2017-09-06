@@ -20,14 +20,6 @@ def get_aware_datetime(date_str):
 		ret = make_aware(ret)
 	return ret
 
-FROM = 'ricardo.ribeiro@neuro.fchampalimaud.org'
-TO = (
-	'ricardo.ribeiro@neuro.fchampalimaud.org',
-	#'preaward.osp@research.fchampalimaud.org', 
-	#'joana.lamego@research.fchampalimaud.org',
-	#'mariana.santamarta@research.fchampalimaud.org'
-)
-
 try:
 	with open('last-run.txt', 'r') as infile: last_run = get_aware_datetime(infile.readline())
 except:
@@ -58,7 +50,12 @@ if last_run is not None:
 		body = render_to_string('funding_newsletter/funding-opportunities-newsletter.html', 
 			{'newfunds':newfunds, 'rollingfunds':rollingfunds, 'closingfunds':closingfunds })
 
-		msg = EmailMessage('FUNDING OPPORTUNITIES', body, settings.ENDING_CONTRACT_FROM, TO )
+		msg = EmailMessage(
+			settings.FUNDING_OPPORTUNITIES_EMAIL_SUBJECT.format(datatime=timezone.now().strftime('%Y.%m.%d'), 
+			body, 
+			settings.EMAIL_FROM, 
+			settings.FUNDING_OPPORTUNITIES_EMAIL_TO, 
+		)
 		msg.content_subtype = "html"
 		msg.send()
 

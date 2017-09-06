@@ -30,7 +30,7 @@
 				{% ifchanged fund.subject %}
 					<tr>
 						<td style='padding-left:20px;padding-right:20px;'>
-							<div style='background-color: #b3c6e7; padding-left:5px;padding-right:20px;padding-bottom:3px;padding-top: 5px;' >{{ fund.subject|upper }}</div>
+							<div style='background-color: #b3c6e7; padding-left:5px;padding-right:20px;padding-bottom:3px;padding-top: 5px;' ><b>{{ fund.subject|upper }}</b></div>
 						</td>
 					</tr>
 				{% endifchanged %}
@@ -107,7 +107,7 @@
 					{% for fund in closingfunds %}
 						{% ifchanged fund.subject %}
 						</ul>
-							{{ fund.subject|upper }}
+							<b>{{ fund.subject|upper }}</b>
 						<ul>								
 						{% endifchanged %}
 						<li style='padding-bottom:5px;font-size:12px;' >
@@ -139,7 +139,7 @@
 				{% ifchanged fund.subject %}
 					<tr>
 						<td style='padding-left:20px;padding-right:20px;'>
-							<div style='background-color: #b3c6e7; padding-left:5px;padding-right:20px;padding-bottom:3px;padding-top: 5px;' >{{ fund.subject|upper }}</div>
+							<div style='background-color: #b3c6e7; padding-left:5px;padding-right:20px;padding-bottom:3px;padding-top: 5px;' ><b>{{ fund.subject|upper }}</b></div>
 						</td>
 					</tr>
 				{% endifchanged %}
@@ -165,8 +165,16 @@
 					{% endif %}
 				</td>
 				</tr>
-			{% endfor %}
+			{% endfor %}			
 		</table>
+		<br/>
+		<div style="text-align:center; vertical-align: middle; text-decoration: none;" >
+			<a href="http://tech-teams.org/" target="_blank" >
+				<img style="vertical-align: middle"  src="http://funding-opportunities.fchampalimaud.org/static/img/swp-logo-black.png">
+				&nbsp;&nbsp;
+				Developed by the &nbsp;<b>Scientific Software Platform</b>
+			</a>
+		</div>
 		<br/>
 		<div style="text-align:center" >For comments or suggestions please send an email to <b>preaward.osp@research.fchampalimaud.org</b></div>
 	</body>

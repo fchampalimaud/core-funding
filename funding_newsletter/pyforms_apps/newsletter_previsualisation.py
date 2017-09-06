@@ -9,6 +9,7 @@ from django.utils import timezone
 from datetime import timedelta
 from django.conf import settings
 
+
 from funding_newsletter.render_newsletter import render_newsletter
 
 class NewsletterPrevisualisation(BaseWidget):
@@ -53,10 +54,11 @@ class NewsletterPrevisualisation(BaseWidget):
 			body = render_newsletter(False)
 			try:
 				msg = EmailMessage(
-					settings.FUNDING_OPPORTUNITIES_EMAIL_SUBJECT, 
+					settings.FUNDING_OPPORTUNITIES_EMAIL_SUBJECT.format(datetime=timezone.now().strftime('%Y.%m.%d')), 
 					body, 
 					settings.EMAIL_FROM, 
-					(self._email.value,) )
+					(self._email.value,)
+				)
 				msg.content_subtype = "html"
 				msg.send()
 				self.success('Email sent with success','Success')

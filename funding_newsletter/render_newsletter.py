@@ -46,7 +46,7 @@ def render_newsletter(save_flag=True):
 	# Do not include the funds sent in the last email
 	if last_run is not None:
 		newfunds = newfunds.exclude(fundingopportunity_end__lte=last_run) if last_run is not None else newfunds
-	newfunds = newfunds.order_by('fundingopportunity_end', 'fundingopportunity_name' )[:NEW_FUNDS_N_MAX]
+	newfunds = newfunds.order_by('subject__opportunitysubject_order','fundingopportunity_end', 'fundingopportunity_name' )[:NEW_FUNDS_N_MAX]
 
 	### CLOSING IN 30 DAYS ########################################################################
 	closingfunds = FundingOpportunity.objects.all()
@@ -54,7 +54,7 @@ def render_newsletter(save_flag=True):
 	limit_date = timezone.now() + timedelta(days=CLOSING_FUNDS_N_DAYS)
 	closingfunds = closingfunds.exclude(fundingopportunity_end__lt=timezone.now())
 	closingfunds = closingfunds.exclude(fundingopportunity_end__gt=limit_date)
-	closingfunds = closingfunds.order_by('subject','fundingopportunity_end', 'fundingopportunity_name' )
+	closingfunds = closingfunds.order_by('subject__opportunitysubject_order','fundingopportunity_end', 'fundingopportunity_name' )
 	###############################################################################################
 
 	### ROLLING OPPORTUNITIES #####################################################################
@@ -69,7 +69,7 @@ def render_newsletter(save_flag=True):
 		if previous_tuesday<=timezone.now().date()<=first_monday:	
 			rollingfunds = FundingOpportunity.objects.all()
 			rollingfunds = rollingfunds.filter(fundingopportunity_end=None)
-			rollingfunds = rollingfunds.order_by('subject','fundingopportunity_end', 'fundingopportunity_name' )
+			rollingfunds = rollingfunds.order_by('subject__opportunitysubject_order','fundingopportunity_end', 'fundingopportunity_name' )
 		else:
 			rollingfunds = []
 	else:
