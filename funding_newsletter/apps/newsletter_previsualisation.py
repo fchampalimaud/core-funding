@@ -16,11 +16,13 @@ class NewsletterPrevisualisation(BaseWidget):
 	
 
 	_uid 			= 'newsletter-previsualisation'
+	
 	groups	 		= ['PROFILE: Can edit the funding opportunities']
+	
 	icon			= 'desktop'
 	label 			= 'Newsletter pre-visualisation'
 	menu 			= 'left'
-	menu_order 		= 10
+	menu_order 		= 0
 	layout_position = LayoutPositions.HOME
 	
 	def __init__(self):

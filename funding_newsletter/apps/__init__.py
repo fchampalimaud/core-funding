@@ -1,0 +1,1 @@
+from funding_newsletter.apps.newsletter_previsualisation import NewsletterPrevisualisation
