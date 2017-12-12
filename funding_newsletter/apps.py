@@ -1,1 +1,0 @@
-from funding_newsletter.pyforms_apps.newsletter_previsualisation import NewsletterPrevisualisation

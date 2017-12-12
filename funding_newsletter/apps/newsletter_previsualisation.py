@@ -17,16 +17,16 @@ class NewsletterPrevisualisation(BaseWidget):
 
 	_uid 			= 'newsletter-previsualisation'
 	
-	groups	 		= ['PROFILE: Can edit the funding opportunities']
+	AUTHORIZED_GROUPS = ['PROFILE: Can edit the funding opportunities']
 	
-	icon			= 'desktop'
-	label 			= 'Newsletter pre-visualisation'
-	menu 			= 'left'
-	menu_order 		= 0
-	layout_position = LayoutPositions.HOME
+	TITLE 				 = 'Newsletter pre-visualisation'
+	ORQUESTRA_MENU 		 = 'left'
+	ORQUESTRA_MENU_ORDER = 0
+	ORQUESTRA_MENU_ICON	 = 'desktop'
+	LAYOUT_POSITION 	 = LayoutPositions.HOME
 	
 	def __init__(self):
-		super(NewsletterPrevisualisation, self).__init__(self.label)
+		super(NewsletterPrevisualisation, self).__init__(self.TITLE)
 
 		self._htmlcontrol = ControlHtml('Pre-visualisation')
 		self._email		  = ControlEmail('Email')
