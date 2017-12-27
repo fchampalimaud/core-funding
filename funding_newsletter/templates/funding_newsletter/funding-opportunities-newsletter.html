@@ -51,12 +51,27 @@
 					<h3 style="float:left;z-index:9;color: #707070;font-size:14px;margin:0;padding:0;" >{{ fund.financingAgency.grantor_name }}</h3>
 					<div style="clear:both"></div>					
 					<table style="border-collapse: collapse;border:none;margin-top:5px;">
-						<tr style="border-collapse: collapse;border:none;font-size:12px;" >
-							<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;" >
-								<label style="font-weight: bold;">Deadline:</label>
-								{{fund.fundingopportunity_end|date:'N j, Y, H:i'}} (Lisbon time)
-							</td>
-						</tr>
+						{% if fund.fundingopportunity_loideadline %}
+							<tr style="border-collapse: collapse;border:none;font-size:12px;" >
+								<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;" >
+									<label style="font-weight: bold;">LOI deadline:</label>
+									{{fund.fundingopportunity_loideadline|date:'N j, Y, H:i'}} (Lisbon time)
+								</td>
+							</tr>
+							<tr style="border-collapse: collapse;border:none;font-size:12px;" >
+								<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;" >
+									<label style="font-weight: bold;">Full proposal deadline:</label>
+									{{fund.fundingopportunity_fullproposal|date:'N j, Y, H:i'}} (Lisbon time)
+								</td>
+							</tr>
+						{% else %}
+							<tr style="border-collapse: collapse;border:none;font-size:12px;" >
+								<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;" >
+									<label style="font-weight: bold;">Deadline:</label>
+									{{fund.fundingopportunity_end|date:'N j, Y, H:i'}} (Lisbon time)
+								</td>
+							</tr>
+						{% endif %}
 						{% if fund.topics.all %}
 						<tr style="border-collapse: collapse;border:none;font-size:12px;" >
 							<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;" >
@@ -67,22 +82,7 @@
 							</td>
 						</tr>
 						{% endif %}
-						{% if fund.fundingopportunity_eligibility %}
-						<tr style="border-collapse: collapse;border:none;font-size:12px;" >
-							<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;padding-top: 8px;" >
-								<label style="font-weight: bold;">ELIGIBILITY</label><br/>
-								{{fund.fundingopportunity_eligibility|linebreaksbr}}
-							</td>
-						</tr>
-						{% endif %}
-						{% if fund.fundingopportunity_scope %}
-						<tr style="border-collapse: collapse;border:none;font-size:12px;" >
-							<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;padding-top: 8px;" >
-								<label style="font-weight: bold;">SCOPE</label><br/>
-								{{fund.fundingopportunity_scope|linebreaksbr}}
-							</td>
-						</tr>
-						{% endif %}
+
 						{% if fund.fundingtype %}
 						<tr style="border-collapse: collapse;border:none;font-size:12px;" >
 							<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;" >
@@ -107,6 +107,24 @@
 							</td>
 						</tr>
 						{% endif %}
+						
+						{% if fund.fundingopportunity_eligibility %}
+						<tr style="border-collapse: collapse;border:none;font-size:12px;" >
+							<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;padding-top: 8px;" >
+								<label style="font-weight: bold;">ELIGIBILITY</label><br/>
+								{{fund.fundingopportunity_eligibility|linebreaksbr}}
+							</td>
+						</tr>
+						{% endif %}
+						{% if fund.fundingopportunity_scope %}
+						<tr style="border-collapse: collapse;border:none;font-size:12px;" >
+							<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;padding-top: 8px;" >
+								<label style="font-weight: bold;">SCOPE</label><br/>
+								{{fund.fundingopportunity_scope|linebreaksbr}}
+							</td>
+						</tr>
+						{% endif %}
+						
 					</table>
 				</td>
 				</tr>
