@@ -15,7 +15,7 @@ from funding_newsletter.render_newsletter import render_newsletter
 class NewsletterPrevisualisation(BaseWidget):
 	
 
-	_uid 			= 'newsletter-previsualisation'
+	UID 			= 'newsletter-previsualisation'
 	
 	AUTHORIZED_GROUPS = ['PROFILE: Can edit the funding opportunities']
 	
