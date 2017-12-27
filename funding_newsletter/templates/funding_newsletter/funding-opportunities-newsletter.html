@@ -83,6 +83,14 @@
 							</td>
 						</tr>
 						{% endif %}
+						{% if fund.fundingtype %}
+						<tr style="border-collapse: collapse;border:none;font-size:12px;" >
+							<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;" >
+								<label style="font-weight: bold;">Funding type:</label>
+								{{fund.fundingtype.fundingtype_name|intcomma}}
+							</td>
+						</tr>
+						{% endif %}
 						{% if fund.fundingopportunity_value %}
 						<tr style="border-collapse: collapse;border:none;font-size:12px;" >
 							<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;" >
