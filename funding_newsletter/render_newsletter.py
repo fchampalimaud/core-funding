@@ -46,7 +46,8 @@ def render_newsletter(save_flag=True):
 	# Do not include the funds sent in the last email
 	if last_run is not None:
 		newfunds = newfunds.exclude(fundingopportunity_end__lte=last_run) if last_run is not None else newfunds
-	newfunds = newfunds.order_by('subject__opportunitysubject_order','fundingopportunity_end', 'fundingopportunity_name' )[:NEW_FUNDS_N_MAX]
+	newfunds = newfunds.order_by('fundingopportunity_end', 'fundingopportunity_name' )[:NEW_FUNDS_N_MAX]
+	newfunds = sorted(newfunds, key=lambda x: x.subject.opportunitysubject_order)
 
 	### CLOSING IN 30 DAYS ########################################################################
 	closingfunds = FundingOpportunity.objects.all()
