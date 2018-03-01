@@ -12,7 +12,7 @@ from dateutil.relativedelta import relativedelta
 
 
 NEW_FUNDS_N_DAYS	 = 5*30 # show new funding opportunities with 
-NEW_FUNDS_N_MAX 	 = 8 # Maximum of funds to send
+NEW_FUNDS_N_MAX 	 = 6 # Maximum of funds to send
 CLOSING_FUNDS_N_DAYS = 30 # number of days required for a fund to be considered a closing fund.
 ROLLING_FUNDS_MONTHS = [1,5,9]
 
