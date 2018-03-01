@@ -55,7 +55,8 @@ def render_newsletter(save_flag=True):
 	limit_date = timezone.now() + timedelta(days=CLOSING_FUNDS_N_DAYS)
 	closingfunds = closingfunds.exclude(fundingopportunity_end__lt=timezone.now())
 	closingfunds = closingfunds.exclude(fundingopportunity_end__gt=limit_date)
-	closingfunds = closingfunds.order_by('subject__opportunitysubject_order','fundingopportunity_end', 'fundingopportunity_name' )
+	closingfunds = closingfunds.order_by('fundingopportunity_end', 'fundingopportunity_name' )
+	closingfunds = sorted(closingfunds, key=lambda x: x.subject.opportunitysubject_order)
 	###############################################################################################
 
 	### ROLLING OPPORTUNITIES #####################################################################
@@ -70,7 +71,8 @@ def render_newsletter(save_flag=True):
 		if previous_tuesday<=timezone.now().date()<=first_monday:	
 			rollingfunds = FundingOpportunity.objects.all()
 			rollingfunds = rollingfunds.filter(fundingopportunity_end=None)
-			rollingfunds = rollingfunds.order_by('subject__opportunitysubject_order','fundingopportunity_end', 'fundingopportunity_name' )
+			rollingfunds = rollingfunds.order_by('fundingopportunity_end', 'fundingopportunity_name' )
+			rollingfunds = sorted(rollingfunds, key=lambda x: x.subject.opportunitysubject_order)
 		else:
 			rollingfunds = []
 	else:
