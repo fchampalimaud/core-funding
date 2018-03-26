@@ -1,8 +1,8 @@
 from funding_opportunities_models.models import FundingOpportunity
-from pyforms_web.web.BaseWidget import BaseWidget
-from pyforms_web.web.Controls.ControlHtml import ControlHtml
-from pyforms_web.web.Controls.ControlEmail import ControlEmail
-from pyforms_web.web.Controls.ControlButton import ControlButton
+from pyforms_web.web.basewidget import BaseWidget, no_columns
+from pyforms_web.web.controls.ControlHtml import ControlHtml
+from pyforms_web.web.controls.ControlEmail import ControlEmail
+from pyforms_web.web.controls.ControlButton import ControlButton
 from orquestra.plugins import LayoutPositions
 from django.core.mail       import EmailMessage
 from django.utils import timezone
@@ -34,7 +34,7 @@ class NewsletterPrevisualisation(BaseWidget):
 		self._sendto_btn  = ControlButton('<i class="mail outline icon"></i> Sent to')
 		self.formset 	  = [
 			'_email',
-			(BaseWidget.FORM_NO_ROW_ALIGNMENT, '_sendto_btn','_refresh_btn' ),
+			no_columns('_sendto_btn','_refresh_btn' ),
 			'_htmlcontrol'
 		]
 
