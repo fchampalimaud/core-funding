@@ -1,94 +1,143 @@
-import sys,os
+import sys, os
 from django.utils.dateparse import parse_datetime
-from funding_opportunities_models.models  import FundingOpportunity
-from django.conf            import settings
-from django.utils           import timezone
-from django.contrib.auth    import models
-from django.core.mail       import EmailMessage
+from funding_opportunities_models.models import FundingOpportunity
+from django.conf import settings
+from django.utils import timezone
+from django.contrib.auth import models
+from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.timezone import is_aware, make_aware
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 
 
-NEW_FUNDS_N_DAYS	 = 5*30 # show new funding opportunities with
-NEW_FUNDS_N_MAX 	 = 6 # Maximum of funds to send
-CLOSING_FUNDS_N_DAYS = 30 # number of days required for a fund to be considered a closing fund.
-ROLLING_FUNDS_MONTHS = [3,6,9]
-
-def get_aware_datetime(date_str):
-	ret = parse_datetime(date_str)
-	if not is_aware(ret):
-		ret = make_aware(ret)
-	return ret
+NEW_FUNDS_N_DAYS = 5*30  # show new funding opportunities with
+NEW_FUNDS_N_MAX = 6  # Maximum of funds to send
+CLOSING_FUNDS_N_DAYS = 30  # number of days required for a fund to be considered a closing fund.
+ROLLING_FUNDS_MONTHS = [3, 6, 9]
 
 
-def find_first_monday(year, month):
-	d = date(year, 1, 4)  # The Jan 4th must be in week 1  according to ISO
-	d = d + relativedelta(months=+month-1)
-	d = d + timedelta( days=-d.weekday() )
-	if (d.month<month): d = d + timedelta(days=7)
-	return d
+def next_monday(step=1):
+    """Returns next monday as a datetime object.
 
-def render_newsletter(save_flag=True):
-	try:
-		flagfile = os.path.join(settings.BASE_DIR,'last-run.txt')
-		with open(flagfile, 'r') as infile: last_run = get_aware_datetime(infile.readline())
-	except:
-		last_run = None
+    Newsletter dissemination is done every monday.
+    This is useful to simulate the newsletter in the future.
+    `step` is the number of weeks to move further.
+    """
+    today = timezone.localdate()
+    return today + timedelta(days=((step*7)-today.weekday()))
 
-	newfunds = FundingOpportunity.objects.all()
-	limit_date = timezone.now() + timedelta(days=NEW_FUNDS_N_DAYS)
-	newfunds = newfunds.exclude(fundingopportunity_end__gt=limit_date)
-	newfunds = newfunds.exclude(fundingopportunity_end__lt=timezone.now())
-	newfunds = newfunds.exclude(fundingopportunity_published=True)
-	newfunds = newfunds.exclude(fundingopportunity_end=None)
-	# Do not include the funds sent in the last email
-	if last_run is not None:
-		newfunds = newfunds.exclude(fundingopportunity_end__lte=last_run) if last_run is not None else newfunds
-	newfunds = newfunds.order_by('fundingopportunity_end', 'fundingopportunity_name' )[:NEW_FUNDS_N_MAX]
-	newfunds = sorted(newfunds, key=lambda x: x.subject.opportunitysubject_order)
 
-	### CLOSING IN 30 DAYS ########################################################################
-	closingfunds = FundingOpportunity.objects.all()
-	closingfunds = closingfunds.exclude(fundingopportunity_end=None)
-	limit_date = timezone.now() + timedelta(days=CLOSING_FUNDS_N_DAYS)
-	closingfunds = closingfunds.exclude(fundingopportunity_end__lt=timezone.now())
-	closingfunds = closingfunds.exclude(fundingopportunity_end__gt=limit_date)
-	closingfunds = closingfunds.order_by('fundingopportunity_end', 'fundingopportunity_name' )
-	closingfunds = sorted(closingfunds, key=lambda x: x.subject.opportunitysubject_order)
-	###############################################################################################
+# def get_aware_datetime(date_str):
+#     ret = parse_datetime(date_str)
+#     if not is_aware(ret):
+#         ret = make_aware(ret)
+#     return ret
 
-	### ROLLING OPPORTUNITIES #####################################################################
-	# They should be generated only on the first monday of May, September and January #############
-	###############################################################################################
-	month = timezone.now().month
 
-	if month in ROLLING_FUNDS_MONTHS:
-		first_monday 	 = find_first_monday(timezone.now().year, month)
-		previous_tuesday = first_monday + timedelta(days=-6)
+# def find_first_monday(year, month):
+#     d = date(year, 1, 4)  # The Jan 4th must be in week 1  according to ISO
+#     d = d + relativedelta(months=+month-1)
+#     d = d + timedelta(days=-d.weekday())
+#     if (d.month < month):
+#         d = d + timedelta(days=7)
+#     return d
 
-		if previous_tuesday<=timezone.now().date()<=first_monday:
-			rollingfunds = FundingOpportunity.objects.all()
-			rollingfunds = rollingfunds.filter(fundingopportunity_end=None)
-			rollingfunds = rollingfunds.order_by('fundingopportunity_end', 'fundingopportunity_name' )
-			rollingfunds = sorted(rollingfunds, key=lambda x: x.subject.opportunitysubject_order)
-		else:
-			rollingfunds = []
-	else:
-		rollingfunds = []
-	###############################################################################################
 
-	body = render_to_string(
-		'funding_newsletter/funding-opportunities-newsletter.html',
-		{
-			'newfunds':		newfunds,
-			'rollingfunds':	rollingfunds,
-			'closingfunds':	closingfunds
-		}
-	)
+def query_new(step=1):
+    """New funding opportunities that have not been disseminated"""
 
-	if save_flag:
-		with open('last-run.txt', 'w') as out: out.write(str(timezone.now()))
+    limit_date = next_monday(step) + timedelta(days=NEW_FUNDS_N_DAYS)
 
-	return body
+    # print(next_monday(step), make_aware(next_monday(step)))
+    # print(limit_date)
+
+
+    newfunds = FundingOpportunity.objects.filter(
+        fundingopportunity_end__gt=next_monday(step),
+        fundingopportunity_end__lt=limit_date,
+        fundingopportunity_published=False,
+        fundingopportunity_end__isnull=False,
+    ).order_by(
+        'fundingopportunity_end',
+        'fundingopportunity_name',
+    )[:NEW_FUNDS_N_MAX]
+    newfunds = sorted(
+        newfunds, key=lambda x: x.subject.opportunitysubject_order)
+
+    return newfunds
+
+
+def query_closing(step=1):
+    """ Closing in 30 days"""
+
+    limit_date = next_monday(step) + timedelta(days=CLOSING_FUNDS_N_DAYS)
+
+    closingfunds = FundingOpportunity.objects.filter(
+        fundingopportunity_end__gt=next_monday(step),
+        fundingopportunity_end__lt=limit_date,
+        fundingopportunity_end__isnull=False,
+    ).order_by(
+        'fundingopportunity_end',
+        'fundingopportunity_name',
+    )
+    closingfunds = sorted(
+        closingfunds, key=lambda x: x.subject.opportunitysubject_order)
+
+    return closingfunds
+
+
+# def query_rolling(step=1):
+#     """ Rolling Opportunities
+#     They should be generated only on the first monday of
+#     May, September and January
+#     """
+#     month = next_monday(step).month
+
+#     if month in ROLLING_FUNDS_MONTHS:
+#         first_monday = find_first_monday(next_monday(step).year, month)
+#         previous_tuesday = first_monday + timedelta(days=-6)
+
+#         if previous_tuesday <= next_monday(step).date() <= first_monday:
+#             rollingfunds = FundingOpportunity.objects.all()
+#             rollingfunds = rollingfunds.filter(fundingopportunity_end=None)
+#             rollingfunds = rollingfunds.order_by(
+#                 'fundingopportunity_end', 'fundingopportunity_name')
+#             rollingfunds = sorted(
+#                 rollingfunds, key=lambda x: x.subject.opportunitysubject_order)
+#         else:
+#             rollingfunds = []
+#     else:
+#         rollingfunds = []
+
+#     return rollingfunds
+
+
+def render_newsletter(step=1):
+
+    # for i in range(1, step+1):
+    #     print(i)
+
+    #     newfunds = query_new(step)
+
+    #     for f in newfunds:
+    #         print(f.fundingopportunity_published, f)
+
+    # return ""
+
+
+
+    newfunds = query_new(step)
+    closingfunds = query_closing(step)
+    rollingfunds = []  # query_rolling(step) FIXME !!!!!!!!!!!!!!!!!!!!!
+
+    body = render_to_string(
+        'funding_newsletter/funding-opportunities-newsletter.html',
+        {
+            'newfunds':     newfunds,
+            'closingfunds': closingfunds,
+            'rollingfunds': rollingfunds,
+        }
+    )
+
+    return body
