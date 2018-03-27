@@ -11,10 +11,10 @@ from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 
 
-NEW_FUNDS_N_DAYS	 = 5*30 # show new funding opportunities with 
+NEW_FUNDS_N_DAYS	 = 5*30 # show new funding opportunities with
 NEW_FUNDS_N_MAX 	 = 6 # Maximum of funds to send
 CLOSING_FUNDS_N_DAYS = 30 # number of days required for a fund to be considered a closing fund.
-ROLLING_FUNDS_MONTHS = [1,5,9]
+ROLLING_FUNDS_MONTHS = [3,6,9]
 
 def get_aware_datetime(date_str):
 	ret = parse_datetime(date_str)
@@ -68,7 +68,7 @@ def render_newsletter(save_flag=True):
 		first_monday 	 = find_first_monday(timezone.now().year, month)
 		previous_tuesday = first_monday + timedelta(days=-6)
 
-		if previous_tuesday<=timezone.now().date()<=first_monday:	
+		if previous_tuesday<=timezone.now().date()<=first_monday:
 			rollingfunds = FundingOpportunity.objects.all()
 			rollingfunds = rollingfunds.filter(fundingopportunity_end=None)
 			rollingfunds = rollingfunds.order_by('fundingopportunity_end', 'fundingopportunity_name' )
@@ -80,7 +80,7 @@ def render_newsletter(save_flag=True):
 	###############################################################################################
 
 	body = render_to_string(
-		'funding_newsletter/funding-opportunities-newsletter.html', 
+		'funding_newsletter/funding-opportunities-newsletter.html',
 		{
 			'newfunds':		newfunds,
 			'rollingfunds':	rollingfunds,
