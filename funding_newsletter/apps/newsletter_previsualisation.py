@@ -34,8 +34,8 @@ class NewsletterPrevisualisation(BaseWidget):
             '<i class="mail outline icon"></i>Send Newsletter',
             include_label=False,
         )
-        self._refresh_btn = ControlButton(
-            '<i class="refresh icon"></i>Reload',
+        self._preview_btn = ControlButton(
+            '<i class="eye icon"></i>Preview Current',
             include_label=False,
         )
         self._previewnext_btn = ControlButton(
@@ -45,21 +45,22 @@ class NewsletterPrevisualisation(BaseWidget):
 
         self.formset = [
             '_email',
-            no_columns('_send_btn', '_refresh_btn', '_previewnext_btn'),
+            no_columns('_send_btn', '_preview_btn', '_previewnext_btn'),
             '_htmlcontrol'
         ]
 
         self._send_btn.value = self.__sendto_event
-        self._refresh_btn.value = self.__refresh_event
+        self._preview_btn.value = self.__preview_event
         self._previewnext_btn.value = self.__previewnext_event
 
-        self._refresh_btn.css = 'basic primary'
+        self._preview_btn.css = 'basic primary'
         self._previewnext_btn.css = 'basic primary'
 
-        self.__refresh_event()
+        self.__preview_event()
         self._email.hide()
 
     def __sendto_event(self):
+
         if self._email.visible is False:
             self._email.show()
         elif not self._email.value:
@@ -81,12 +82,16 @@ class NewsletterPrevisualisation(BaseWidget):
             except Exception as e:
                 self.alert(str(e), 'Error')
 
-    def __refresh_event(self):
+    def __preview_event(self):
         step = 1
-        self._htmlcontrol.label = "To be disseminated %s" % next_monday(step)
+        date = next_monday(step).strftime('%A, %B %d')
+        self._htmlcontrol.label = "To be disseminated %s" % date
         self._htmlcontrol.value = render_newsletter(step)
+        self._send_btn.enabled = True
 
     def __previewnext_event(self):
         step = 2
-        self._htmlcontrol.label = "To be disseminated %s" % next_monday(step)
+        date = next_monday(step).strftime('%A, %B %d')
+        self._htmlcontrol.label = "To be disseminated %s" % date
         self._htmlcontrol.value = render_newsletter(step)
+        self._send_btn.enabled = False

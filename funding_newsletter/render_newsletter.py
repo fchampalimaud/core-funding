@@ -24,7 +24,8 @@ def next_monday(step=1):
     This is useful to simulate the newsletter in the future.
     `step` is the number of weeks to move further.
     """
-    today = timezone.localdate()
+    today = timezone.localtime().replace(
+        hour=0, minute=0, second=0, microsecond=0)
     return today + timedelta(days=((step*7)-today.weekday()))
 
 
@@ -48,10 +49,6 @@ def query_new(step=1):
     """New funding opportunities that have not been disseminated"""
 
     limit_date = next_monday(step) + timedelta(days=NEW_FUNDS_N_DAYS)
-
-    # print(next_monday(step), make_aware(next_monday(step)))
-    # print(limit_date)
-
 
     newfunds = FundingOpportunity.objects.filter(
         fundingopportunity_end__gt=next_monday(step),
@@ -115,18 +112,18 @@ def query_closing(step=1):
 
 def render_newsletter(step=1):
 
-    # for i in range(1, step+1):
-    #     print(i)
+    # Collect opportunities that were disseminated, allegedly...
+    skipped_opportunities = []
+    for i in range(1, step):
+        newfunds = query_new(step)
+        skipped_opportunities.extend(newfunds)
 
-    #     newfunds = query_new(step)
+    # and mark them as published
+    for o in skipped_opportunities:
+        o.fundingopportunity_published = True
+        o.save()
 
-    #     for f in newfunds:
-    #         print(f.fundingopportunity_published, f)
-
-    # return ""
-
-
-
+    # generate the newsletter
     newfunds = query_new(step)
     closingfunds = query_closing(step)
     rollingfunds = []  # query_rolling(step) FIXME !!!!!!!!!!!!!!!!!!!!!
@@ -139,5 +136,10 @@ def render_newsletter(step=1):
             'rollingfunds': rollingfunds,
         }
     )
+
+    # finally, mark the opportunities as not published again
+    for o in skipped_opportunities:
+        o.fundingopportunity_published = False
+        o.save()
 
     return body
