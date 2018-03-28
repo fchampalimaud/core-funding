@@ -32,15 +32,18 @@ class NewsletterPrevisualisation(BaseWidget):
         self._email = ControlEmail('Email')
         self._send_btn = ControlButton(
             '<i class="mail outline icon"></i>Send Newsletter',
-            include_label=False,
+            label_visible=False,
+            css='primary',
         )
         self._preview_btn = ControlButton(
-            '<i class="eye icon"></i>Preview Current',
-            include_label=False,
+            '<i class="refresh icon"></i>Refresh',
+            label_visible=False,
+            css='',
         )
         self._previewnext_btn = ControlButton(
             '<i class="eye icon"></i>Preview Next',
-            include_label=False,
+            label_visible=False,
+            css='',
         )
 
         self.formset = [
@@ -52,9 +55,6 @@ class NewsletterPrevisualisation(BaseWidget):
         self._send_btn.value = self.__sendto_event
         self._preview_btn.value = self.__preview_event
         self._previewnext_btn.value = self.__previewnext_event
-
-        self._preview_btn.css = 'basic primary'
-        self._previewnext_btn.css = 'basic primary'
 
         self.__preview_event()
         self._email.hide()
