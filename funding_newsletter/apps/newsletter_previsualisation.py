@@ -1,74 +1,149 @@
-from funding_opportunities_models.models import FundingOpportunity
-from pyforms_web.web.basewidget import BaseWidget
+from pyforms_web.web.basewidget import BaseWidget, no_columns
 from pyforms_web.web.controls.ControlHtml import ControlHtml
 from pyforms_web.web.controls.ControlEmail import ControlEmail
 from pyforms_web.web.controls.ControlButton import ControlButton
 from orquestra.plugins import LayoutPositions
-from django.core.mail       import EmailMessage
+from django.core.mail import EmailMessage
 from django.utils import timezone
-from datetime import timedelta
 from django.conf import settings
 
-
+from funding_newsletter.render_newsletter import query_new
+from funding_newsletter.render_newsletter import next_monday
 from funding_newsletter.render_newsletter import render_newsletter
 
+
+class AskConfirmationPopup(BaseWidget):
+    AUTHORIZED_GROUPS = ['PROFILE: Can edit the funding opportunities']
+    LAYOUT_POSITION = LayoutPositions.NEW_WINDOW
+
+    def __init__(self, title, message, action):
+        super().__init__(title=title)
+
+        self._y_btn = ControlButton('Yes', css='positive', default=action)
+        self._n_btn = ControlButton('No', css='negative', default=self.close)
+
+        self.formset = [
+            message,
+            no_columns('_y_btn', '_n_btn')
+        ]
+
+
 class NewsletterPrevisualisation(BaseWidget):
-	
 
-	UID 			= 'newsletter-previsualisation'
-	
-	AUTHORIZED_GROUPS = ['PROFILE: Can edit the funding opportunities']
-	
-	TITLE 				 = 'Newsletter pre-visualisation'
-	ORQUESTRA_MENU 		 = 'left'
-	ORQUESTRA_MENU_ORDER = 0
-	ORQUESTRA_MENU_ICON	 = 'desktop'
-	LAYOUT_POSITION 	 = LayoutPositions.HOME
-	
-	def __init__(self):
-		super(NewsletterPrevisualisation, self).__init__(self.TITLE)
+    UID = 'newsletter-previsualisation'
 
-		self._htmlcontrol = ControlHtml('Pre-visualisation')
-		self._email		  = ControlEmail('Email')
-		self._refresh_btn = ControlButton('<i class="refresh icon"></i> Reload')
-		self._sendto_btn  = ControlButton('<i class="mail outline icon"></i> Sent to')
-		self.formset 	  = [
-			'_email',
-			(BaseWidget.FORM_NO_ROW_ALIGNMENT, '_sendto_btn','_refresh_btn' ),
-			'_htmlcontrol'
-		]
+    AUTHORIZED_GROUPS = ['PROFILE: Can edit the funding opportunities']
 
-		self._refresh_btn.value = self.__refresh_event
-		self._sendto_btn.value  = self.__sendto_event
+    TITLE = 'Newsletter'
+    ORQUESTRA_MENU = 'left'
+    ORQUESTRA_MENU_ORDER = 0
+    ORQUESTRA_MENU_ICON = 'desktop'
+    LAYOUT_POSITION = LayoutPositions.HOME
 
-		self._refresh_btn.include_label = False
-		#self._refresh_btn.css = 'basic mini primary'
-		self._sendto_btn.include_label = False
-		#self._sendto_btn.css = 'basic mini primary'
+    def __init__(self):
+        super(NewsletterPrevisualisation, self).__init__(self.TITLE)
 
-		self._htmlcontrol.value = render_newsletter(False)
-		self._email.hide()
+        self._htmlcontrol = ControlHtml('Pre-visualisation')
+        self._email = ControlEmail('Email')
+        self._send_btn = ControlButton(
+            '<i class="mail outline icon"></i>Send Newsletter',
+            label_visible=False,
+            css='fluid primary',
+        )
+        self._preview_btn = ControlButton(
+            '<i class="refresh icon"></i>Refresh',
+            label_visible=False,
+            css='fluid',
+        )
+        self._previewnext_btn = ControlButton(
+            '<i class="eye icon"></i>Preview Next',
+            label_visible=False,
+            css='fluid',
+        )
+        self._publishlisted_btn = ControlButton(
+            '<i class="flag checkered icon"></i>Publish',
+            label_visible=False,
+            css='fluid secondary',
+        )
 
-	def __sendto_event(self):
-		if self._email.visible==False:
-			self._email.show()
-		else:
-			body = render_newsletter(False)
-			try:
-				msg = EmailMessage(
-					settings.FUNDING_OPPORTUNITIES_EMAIL_SUBJECT.format(datetime=timezone.now().strftime('%Y.%m.%d')), 
-					body, 
-					settings.EMAIL_FROM, 
-					(self._email.value,)
-				)
-				msg.content_subtype = "html"
-				msg.send()
-				self.success('Email sent with success','Success')
-				self._email.hide()
-			except Exception as e:
-				self.alert(str(e),'Error')	
-			
+        self.formset = [
+            '_email',
+            ('_send_btn', '_preview_btn', '_previewnext_btn', '_publishlisted_btn'),
+            '_htmlcontrol'
+        ]
 
-	def __refresh_event(self):
-		body = render_newsletter(False)
-		self._htmlcontrol.value = body
+        self._send_btn.value = self.__sendto_event
+        self._preview_btn.value = self.__preview_event
+        self._previewnext_btn.value = self.__previewnext_event
+        self._publishlisted_btn.value = self.__publish_event
+
+        self.__preview_event()
+        self._email.hide()
+
+    def __sendto_event(self):
+
+        if self._email.visible is False:
+            self._email.show()
+        elif not self._email.value:
+            self.alert('Please specify an email address', 'Error')
+        else:
+            body = render_newsletter()
+            try:
+                msg = EmailMessage(
+                    settings.FUNDING_OPPORTUNITIES_EMAIL_SUBJECT.format(
+                        datetime=timezone.now().strftime('%Y.%m.%d')),
+                    body,
+                    settings.EMAIL_FROM,
+                    (self._email.value,)
+                )
+                msg.content_subtype = "html"
+                msg.send()
+                self.success('Email sent with success', 'Success')
+                self._email.hide()
+            except Exception as e:
+                self.alert(str(e), 'Error')
+
+    def __preview_event(self):
+        skip = 0
+        date = next_monday(skip).strftime('%A, %B %d')
+        self._htmlcontrol.label = "<h3>To be disseminated %s</h3>" % date
+        self._htmlcontrol.value = render_newsletter(skip)
+
+        self._send_btn.enabled = True
+        self._publishlisted_btn.enabled = True
+
+    def __previewnext_event(self):
+        skip = 1
+        date = next_monday(skip).strftime('%A, %B %d')
+        self._htmlcontrol.label = "<h3>To be disseminated %s</h3>" % date
+        self._htmlcontrol.value = render_newsletter(skip)
+
+        self._send_btn.enabled = False
+        self._publishlisted_btn.enabled = False
+
+    def __publish_event(self):
+
+        def publish():
+            print("Publishing", newfunds)
+
+            for o in newfunds:
+                print("Publishing", o)
+                o.fundingopportunity_published = True
+                o.save()
+
+            popup.close()
+            self.__preview_event()
+
+        newfunds = query_new()
+
+        popup = AskConfirmationPopup(
+            title=("Are you sure you want to mark the following"
+                   " Opportunities as published?"),
+            message="".join(
+                map(lambda s: "<li>%s</li>" % s, map(str, newfunds))
+            ),
+            action=publish,
+        )
+
+        for o in newfunds:
+            print("FAKE Publishing", o)

@@ -1,3 +1,4 @@
 *.pyc
+*.egg-info
 
 Core_funding_newsletter\.egg-info/
