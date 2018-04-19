@@ -51,7 +51,7 @@ class NewsletterPrevisualisation(BaseWidget):
             css='fluid primary',
         )
         self._preview_btn = ControlButton(
-            '<i class="refresh icon"></i>Refresh',
+            '<i class="refresh icon"></i>Load Current',
             label_visible=False,
             css='fluid',
         )
@@ -63,19 +63,20 @@ class NewsletterPrevisualisation(BaseWidget):
         self._publishlisted_btn = ControlButton(
             '<i class="flag checkered icon"></i>Publish',
             label_visible=False,
-            css='fluid secondary',
+            css='fluid red',
+            helptext='Press the publish button if you want to mark these fundings opportunities as published, so they do not appear in the next newsletter.'
         )
 
         self.formset = [
             '_email',
-            ('_send_btn', '_preview_btn', '_previewnext_btn', '_publishlisted_btn'),
+            no_columns('_send_btn', '_preview_btn', '_previewnext_btn', '_publishlisted_btn'),
             '_htmlcontrol'
         ]
 
         self._send_btn.value = self.__sendto_event
-        self._preview_btn.value = self.__preview_event
-        self._previewnext_btn.value = self.__previewnext_event
-        self._publishlisted_btn.value = self.__publish_event
+        self._preview_btn.value         = self.__preview_event
+        self._previewnext_btn.value     = self.__previewnext_event
+        self._publishlisted_btn.value   = self.__publish_event
 
         self.__preview_event()
         self._email.hide()
@@ -124,13 +125,9 @@ class NewsletterPrevisualisation(BaseWidget):
     def __publish_event(self):
 
         def publish():
-            print("Publishing", newfunds)
-
             for o in newfunds:
-                print("Publishing", o)
                 o.fundingopportunity_published = True
                 o.save()
-
             popup.close()
             self.__preview_event()
 
@@ -144,6 +141,3 @@ class NewsletterPrevisualisation(BaseWidget):
             ),
             action=publish,
         )
-
-        for o in newfunds:
-            print("FAKE Publishing", o)
