@@ -1,7 +1,7 @@
-from pyforms_web.web.basewidget import BaseWidget, no_columns
-from pyforms_web.web.controls.ControlHtml import ControlHtml
-from pyforms_web.web.controls.ControlEmail import ControlEmail
-from pyforms_web.web.controls.ControlButton import ControlButton
+from pyforms_web.basewidget import BaseWidget, no_columns
+from pyforms_web.controls.ControlHtml import ControlHtml
+from pyforms_web.controls.ControlEmail import ControlEmail
+from pyforms_web.controls.ControlButton import ControlButton
 from orquestra.plugins import LayoutPositions
 from django.core.mail import EmailMessage
 from django.utils import timezone
