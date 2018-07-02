@@ -67,6 +67,10 @@ def query_new(start_date=None):
     start_date = start_date or next_monday()
     limit_date = start_date + timedelta(days=NEW_FUNDS_N_DAYS)
 
+    # TODO
+    # how to introduce rolling?
+    # prioritize 3 months deadline, then rolling and then extend to 5 months if there are spots available
+
     newfunds = FundingOpportunity.objects.filter(
         fundingopportunity_end__gt=start_date,
         fundingopportunity_end__lt=limit_date,
