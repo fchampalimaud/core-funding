@@ -11,12 +11,6 @@ from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 
 
-NEW_FUNDS_N_DAYS = 5*30  # show new funding opportunities with
-NEW_FUNDS_N_MAX = 6  # Maximum of funds to send
-CLOSING_FUNDS_N_DAYS = 30  # number of days required for a fund to be considered a closing fund.
-ROLLING_FUNDS_MONTHS = [3, 6, 9]
-
-
 def today():
     """Returns localized today datetime object"""
     return timezone.localtime().replace(
@@ -65,7 +59,7 @@ def query_new(start_date=None):
     # next_tuesday = day if day.weekday() == 0 else next_monday(skip)
 
     start_date = start_date or next_monday()
-    limit_date = start_date + timedelta(days=NEW_FUNDS_N_DAYS)
+    limit_date = start_date + timedelta(days=settings.NEW_FUNDS_N_DAYS)
 
     # TODO
     # how to introduce rolling?
@@ -79,7 +73,7 @@ def query_new(start_date=None):
     ).order_by(
         'fundingopportunity_end',
         'fundingopportunity_name',
-    )[:NEW_FUNDS_N_MAX]
+    )[:settings.NEW_FUNDS_N_MAX]
     newfunds = sorted(
         newfunds, key=lambda x: x.subject.opportunitysubject_order)
 
@@ -90,7 +84,7 @@ def query_closing(start_date=None):
     """ Closing in 30 days"""
 
     start_date = start_date or next_monday()
-    limit_date = start_date + timedelta(days=CLOSING_FUNDS_N_DAYS)
+    limit_date = start_date + timedelta(days=settings.CLOSING_FUNDS_N_DAYS)
 
     closingfunds = FundingOpportunity.objects.filter(
         fundingopportunity_end__gt=start_date,
@@ -113,7 +107,7 @@ def query_closing(start_date=None):
 #     """
 #     month = next_monday(skip).month
 
-#     if month in ROLLING_FUNDS_MONTHS:
+#     if month in settings.ROLLING_FUNDS_MONTHS:
 #         first_monday = find_first_monday(next_monday(skip).year, month)
 #         previous_tuesday = first_monday + timedelta(days=-6)
 
