@@ -7,7 +7,7 @@ from django.core.mail   import EmailMessage
 from django.utils import timezone
 
 from django.conf import settings
-from confapp     import conf
+from confapp import conf
 
 from funding_newsletter.render_newsletter import query_new
 from funding_newsletter.render_newsletter import next_monday
@@ -15,7 +15,7 @@ from funding_newsletter.render_newsletter import render_newsletter
 
 
 class AskConfirmationPopup(BaseWidget):
-    AUTHORIZED_GROUPS = ['PROFILE: Can edit the funding opportunities']
+    AUTHORIZED_GROUPS = ['PROFILE: Can edit the funding opportunities', 'superuser']
     LAYOUT_POSITION   = conf.ORQUESTRA_NEW_WINDOW
 
     def __init__(self, title, message, action):
@@ -33,14 +33,15 @@ class AskConfirmationPopup(BaseWidget):
 class NewsletterPrevisualisation(BaseWidget):
 
     UID = 'newsletter-previsualisation'
-
-    AUTHORIZED_GROUPS = ['PROFILE: Can edit the funding opportunities']
-
     TITLE = 'Newsletter'
+
+    AUTHORIZED_GROUPS = ['PROFILE: Can edit the funding opportunities', 'superuser']
+    LAYOUT_POSITION = conf.ORQUESTRA_HOME
+
     ORQUESTRA_MENU = 'left'
     ORQUESTRA_MENU_ORDER = 0
     ORQUESTRA_MENU_ICON = 'desktop'
-    LAYOUT_POSITION = conf.ORQUESTRA_HOME
+    
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
