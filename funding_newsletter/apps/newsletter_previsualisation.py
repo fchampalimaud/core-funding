@@ -1,11 +1,13 @@
-from pyforms_web.basewidget import BaseWidget, no_columns
-from pyforms_web.controls.ControlHtml import ControlHtml
-from pyforms_web.controls.ControlEmail import ControlEmail
-from pyforms_web.controls.ControlButton import ControlButton
-from orquestra.plugins import LayoutPositions
-from django.core.mail import EmailMessage
+from pyforms.basewidget import BaseWidget, no_columns
+from pyforms.controls   import ControlHtml
+from pyforms.controls   import ControlEmail
+from pyforms.controls   import ControlButton
+
+from django.core.mail   import EmailMessage
 from django.utils import timezone
+
 from django.conf import settings
+from confapp     import conf
 
 from funding_newsletter.render_newsletter import query_new
 from funding_newsletter.render_newsletter import next_monday
@@ -14,7 +16,7 @@ from funding_newsletter.render_newsletter import render_newsletter
 
 class AskConfirmationPopup(BaseWidget):
     AUTHORIZED_GROUPS = ['PROFILE: Can edit the funding opportunities']
-    LAYOUT_POSITION = LayoutPositions.NEW_WINDOW
+    LAYOUT_POSITION   = conf.ORQUESTRA_NEW_WINDOW
 
     def __init__(self, title, message, action):
         super().__init__(title=title)
@@ -38,10 +40,10 @@ class NewsletterPrevisualisation(BaseWidget):
     ORQUESTRA_MENU = 'left'
     ORQUESTRA_MENU_ORDER = 0
     ORQUESTRA_MENU_ICON = 'desktop'
-    LAYOUT_POSITION = LayoutPositions.HOME
+    LAYOUT_POSITION = conf.ORQUESTRA_HOME
 
-    def __init__(self):
-        super(NewsletterPrevisualisation, self).__init__(self.TITLE)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         self._htmlcontrol = ControlHtml('Pre-visualisation')
         self._email = ControlEmail('Email')
