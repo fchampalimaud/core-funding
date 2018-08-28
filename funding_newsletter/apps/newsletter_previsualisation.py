@@ -41,7 +41,7 @@ class NewsletterPrevisualisation(BaseWidget):
     ORQUESTRA_MENU = 'left'
     ORQUESTRA_MENU_ORDER = 0
     ORQUESTRA_MENU_ICON = 'desktop'
-    
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -73,7 +73,15 @@ class NewsletterPrevisualisation(BaseWidget):
         self.formset = [
             '_email',
             no_columns('_send_btn', '_preview_btn', '_previewnext_btn', '_publishlisted_btn'),
-            '_htmlcontrol'
+            '_htmlcontrol',
+            (
+                'info:'
+                '<h5>Notes:</h5>'
+                'Rolling opportunities are listed only if new opportunities '
+                'are less than ' + str(settings.NEW_FUNDS_N_MAX) + '.'
+                'You can control which are shown using their <b>Published</b> '
+                'attribute.'
+            ),
         ]
 
         self._send_btn.value = self.__sendto_event

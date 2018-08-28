@@ -102,6 +102,9 @@ def query_closing(start_date=None):
 
 # def query_rolling(skip=1):
 #     """ Rolling Opportunities
+
+#     Deprecated rule:
+
 #     They should be generated only on the first monday of
 #     May, September and January
 #     """
@@ -126,6 +129,19 @@ def query_closing(start_date=None):
 #     return rollingfunds
 
 
+def query_rolling():
+    """ Rolling Opportunities
+
+    Should be included as filler when New opportunities do not make up
+    for *NEW_FUNDS_N_MAX*. Show only opportunities marked as not published.
+    """
+    rollingfunds = FundingOpportunity.objects.filter(
+        fundingopportunity_rolling=True,
+        fundingopportunity_published=False,
+    )
+    return rollingfunds
+
+
 def render_newsletter(skip=0):
 
     # Collect opportunities that were disseminated, allegedly...
@@ -148,9 +164,9 @@ def render_newsletter(skip=0):
     start_date = next_monday(skip)
     newfunds = query_new(start_date)
     closingfunds = query_closing(start_date)
-    rollingfunds = []  # query_rolling(skip) FIXME !!!!!!!!!!!!!!!!!!!!!
+    rollingfunds = query_rolling() if len(newfunds) < settings.NEW_FUNDS_N_MAX else []
 
-    if newfunds:
+    if newfunds or rollingfunds:
         body = render_to_string(
             'funding_newsletter/funding-opportunities-newsletter.html',
             {
