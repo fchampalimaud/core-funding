@@ -179,6 +179,13 @@
 									{{fund.fundingopportunity_end|date:'N j, Y, H:i'}} (Lisbon time)
 								</td>
 							</tr>
+						{% else %}
+							<tr style="border-collapse: collapse;border:none;font-size:12px;" >
+								<td valign="top" style="border-collapse: collapse;border:none;font-size:12px;" >
+									<label style="font-weight: bold;">Deadline:</label>
+									No deadline
+								</td>
+							</tr>	
 						{% endif %}
 						{% if fund.topics.all %}
 						<tr style="border-collapse: collapse;border:none;font-size:12px;" >
