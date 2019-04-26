@@ -24,8 +24,8 @@ class ProfileApp(BaseWidget):
         self._topics = ControlMultipleChecks('My topics', mode='scrolling', changed_event=self.__topics_changed_evt, label_visible=False)
 
         self.formset = [
-            """info:Select the topics that interest you more.<br/>
-            This information is very important for the Pre-Award team so we can redirect our efforts to look for the funding you need.""",
+            """info:Please select the topics that interest you more.<br/>
+            This information is very important to the Pre-Award team.""",
             ' ',
             '_topics'
         ]
