@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 import re
 
 setup(
-	name='Core funding newsletter',
+	name='core-funding',
 	version=0.0,
 	description="Application to manage the funding opportunities.",
 	author=['Ricardo Ribeiro'],
