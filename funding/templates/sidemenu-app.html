@@ -1,0 +1,31 @@
+<br/>
+<br/>
+<br/>
+<br/>
+
+<div class="ui card">
+	<div class="content">
+		<div class="header">Favorites</div>
+	</div>
+	<div class="content">
+		<div class="ui list" >
+		{% for favorite in favorites %}
+			<a class="item" href='#/funding.apps.timeline.viewfund.ViewFundApp/?obj_pk={{favorite.funding.pk}}' >
+				{{favorite.funding.fundingopportunity_name|truncatechars:50}}
+			</a>
+		{% endfor %}
+		</div>
+	</div>
+</div>
+
+<style type="text/css">
+	
+	#sidemenu-app-_htmlcontrol a.item{
+		color: #4183C4 !important;
+	}
+
+	#sidemenu-app-_htmlcontrol a.item:hover{
+		color: #1e70bf !important;
+	}
+
+</style>

@@ -9,9 +9,9 @@ from django.utils import timezone
 from django.conf import settings
 from confapp import conf
 
-from funding_newsletter.render_newsletter import query_new
-from funding_newsletter.render_newsletter import next_monday
-from funding_newsletter.render_newsletter import render_newsletter
+from funding.render_newsletter import query_new
+from funding.render_newsletter import next_monday
+from funding.render_newsletter import render_newsletter
 
 
 class AskConfirmationPopup(BaseWidget):

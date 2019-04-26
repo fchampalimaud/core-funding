@@ -1,14 +1,10 @@
 import sys,os
-sys.path.append("/home/ricardo/bitbucket/core-project/research-core");
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cnp_core_conf.settings")
-#import django; django.setup()
-from django.core.management import execute_from_command_line
 
 from django.utils.dateparse import parse_datetime
-from osp.models             import FundingOpportunity
+from .models             	import FundingOpportunity
 from django.conf            import settings
 from django.utils           import timezone
-from django.contrib.auth    import models
 from django.core.mail       import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.timezone import is_aware, make_aware
@@ -47,7 +43,7 @@ if last_run is not None:
 	closingfunds = closingfunds.order_by('fundingopportunity_end', 'fundingopportunity_name' )
 
 	if newfunds.count()>0 or rollingfunds.count()>0 or closingfunds.count()>0:
-		body = render_to_string('funding_newsletter/funding-opportunities-newsletter.html', 
+		body = render_to_string('funding/funding-opportunities-newsletter.html',
 			{'newfunds':newfunds, 'rollingfunds':rollingfunds, 'closingfunds':closingfunds })
 
 		msg = EmailMessage(

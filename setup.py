@@ -7,10 +7,10 @@ import re
 setup(
 	name='Core funding newsletter',
 	version=0.0,
-	description="""""",
+	description="Application to manage the funding opportunities.",
 	author=['Ricardo Ribeiro'],
 	author_email=['ricardojvr@gmail.com'],
-	url='https://bitbucket.org/fchampalimaud/research-core-funding-newsletter',
+	url='https://github.com/fchampalimaud/core-funding',
 	packages=find_packages(),
-	package_data={'funding_newsletter': ['templates/funding_newsletter/*.html']},
+	package_data={'funding': ['templates/funding/*.html']},
 )

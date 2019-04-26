@@ -1,15 +1,8 @@
-import sys, os
-from django.utils.dateparse import parse_datetime
-from funding_opportunities_models.models import FundingOpportunity
+from .models import FundingOpportunity
 from django.conf import settings
 from django.utils import timezone
-from django.contrib.auth import models
-from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
-from django.utils.timezone import is_aware, make_aware
 from datetime import timedelta
-from dateutil.relativedelta import relativedelta
-
 
 def today():
     """Returns localized today datetime object"""
@@ -168,7 +161,7 @@ def render_newsletter(skip=0):
 
     if newfunds or rollingfunds:
         body = render_to_string(
-            'funding_newsletter/funding-opportunities-newsletter.html',
+            'funding/funding-opportunities-newsletter.html',
             {
                 'newfunds':     newfunds,
                 'closingfunds': closingfunds,

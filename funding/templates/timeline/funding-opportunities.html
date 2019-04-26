@@ -1,0 +1,80 @@
+<link rel="stylesheet" type="text/css" href="/static/css/timeline.css">
+
+<section id="cd-timeline" class="cd-container">
+{% for node in nodes %}
+	<div class="cd-timeline-block">
+		{% ifchanged node.enddate %}
+		<div class="cd-timeline-img cd-picture"></div> <!-- cd-timeline-img -->
+		{% endifchanged %}
+
+		<div class="ui card cd-timeline-content">
+			<div class="extra content">
+				<div class="meta">
+					<a>{{node.subject}}</a>
+				</div>
+				<div class="header">{{node.grantor}}</div>
+			</div>
+			<div class="content">				
+				<div class="meta">
+					<span>{{node.title}}</span>
+				</div>
+				{% comment %}{% if node.body %}<p>{{node.body}}</p>{% endif %}{% endcomment %}
+			</div>
+			{% if node.topics %}
+			<div class="extra content">
+				{% for topic in node.topics %}
+				<span class='ui label'>{{topic}}</span>
+				{% endfor %}
+			</div>
+			{% endif %}
+			<div class="extra content">
+				<a href='#/funding.apps.timeline.viewfund.ViewFundApp/?obj_pk={{node.pk}}' class="ui basic mini orange button">
+					<i class='ui icon info'></i>					
+					Read more
+				</a>
+				{% if node.read_more is not None %}
+				<a href="{{node.read_more}}" target='_blank' class="ui basic mini blue button">
+					<i class='ui icon external'></i>
+					URL
+				</a>
+				{% endif %}
+			</div>
+			{% ifchanged node.enddate %}<span class="cd-date">{{node.enddate}}</span>{% endifchanged %}
+		</div>
+
+		 <!-- cd-timeline-content -->
+	</div> <!-- cd-timeline-block -->
+{% endfor %}
+</section> <!-- cd-timeline -->
+
+
+<script type="text/javascript">
+	
+	jQuery(document).ready(function($){
+		var timelineBlocks = $('.cd-timeline-block'),
+			offset = 0.8;
+
+		//hide timeline blocks which are outside the viewport
+		hideBlocks(timelineBlocks, offset);
+
+		//on scolling, show/animate timeline blocks when enter the viewport
+		$(window).on('scroll', function(){
+			(!window.requestAnimationFrame) 
+				? setTimeout(function(){ showBlocks(timelineBlocks, offset); }, 100)
+				: window.requestAnimationFrame(function(){ showBlocks(timelineBlocks, offset); });
+		});
+
+		function hideBlocks(blocks, offset) {
+			blocks.each(function(){
+				( $(this).offset().top > $(window).scrollTop()+$(window).height()*offset ) && $(this).find('.cd-timeline-img, .cd-timeline-content').addClass('is-hidden');
+			});
+		}
+
+		function showBlocks(blocks, offset) {
+			blocks.each(function(){
+				( $(this).offset().top <= $(window).scrollTop()+$(window).height()*offset && $(this).find('.cd-timeline-img').hasClass('is-hidden') ) && $(this).find('.cd-timeline-img, .cd-timeline-content').removeClass('is-hidden').addClass('bounce-in');
+			});
+		}
+	});
+
+</script>

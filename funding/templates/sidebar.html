@@ -1,0 +1,39 @@
+<div class="ui left vertical inverted accordion menu sidebar black medium  visible screen computer only top-vspacer" id='leftsidebar' >
+
+    <div class="item white" style="height: 54px; background-color: white;" >
+        {{ submenu_title|safe }}
+    </div>
+
+    {% for menu in menu_plugins %}
+        {% ifequal menu.menu_place 'left' %}
+            <a class="item {% if menu.active %}active{% endif %}" href="/app/{{ menu.uid }}/">
+                <div class="title {% if menu.active or menu.submenu_active %}active{% endif %}">
+                    {% if menu.icon %}<i class="{{menu.icon}} icon"></i>{% endif %}
+                    {{ menu.label }}
+                    {% if menu.submenus %}<i class="dropdown icon"></i>{% endif %}
+                </div>
+            </a>
+            {% if menu.show_submenu and menu.submenus %}
+            <div class="active content">
+      
+                {% for submenu in menu.submenus %}
+                    <a class="item transition {% if submenu.active %}active{% endif %}" href="/app/{{ submenu.uid }}/" onclick="{{ submenu.js_call }}" >
+                        {{ submenu.label }}
+                        {% if submenu.icon %}<i class="{{submenu.icon}} icon"></i>{% endif %}
+                    </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+        {% endifequal %}
+    {% endfor %}
+
+    <div id='side-menu-app-place' style="padding:10px;" ></div>
+    <script type="text/javascript">
+        $(document).ready(function(){run_application('funding.apps.sidemenu.SideMenuApp');});
+    </script>
+
+</div>
+
+
+
