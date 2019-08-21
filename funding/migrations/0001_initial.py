@@ -26,16 +26,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='CurrencyConversion',
-            fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('rate', models.FloatField(verbose_name='Conversion rate')),
-                ('date', models.DateTimeField(auto_now_add=True, verbose_name='Date')),
-                ('from_currency', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='from_currency', to='funding.Currency', verbose_name='From')),
-                ('to_currency', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='to_currency', to='funding.Currency', verbose_name='To')),
-            ],
-        ),
-        migrations.CreateModel(
             name='Favorite',
             fields=[
                 ('favorite_id', models.AutoField(primary_key=True, serialize=False)),
